@@ -6,7 +6,7 @@
                     <div class="panel-heading">Example Component</div>
 
                     <div class="panel-body">
-                        About
+                        About page goes here
                     </div>
                 </div>
             </div>
