@@ -1,0 +1,51 @@
+//Variables
+$maroon: #962d3e;
+$offblack: #343642;
+$grey: #979C9C;
+$offwhite: #F2EBC7;
+$offblue: #348899;
+
+
+//Overridden variables
+$primary: $maroon;
+$info: $offblue;
+$dark: $offblack;
+$background: $offwhite;
+$link: $info;
+$code-background: $offwhite;
+
+
+//import bulma
+
+
+@import '~bulma/bulma.sass';
+
+.img-circle {
+  border-radius: 50%;
+}
+
+.maxwidth{
+  max-width: 128px;
+}
+
+.result-W{
+  color: green;
+}
+.result-L{
+  color: red;
+}
+.result-D{
+  color: darkorange;
+}
+.table td > * {
+  vertical-align : middle;
+}
+
+.svg{
+  margin: 25px;
+}
+.path{
+  fill: none;
+  stroke: #76BF8A;
+  stroke-width: 3px;
+}
