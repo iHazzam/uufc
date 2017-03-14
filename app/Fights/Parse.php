@@ -161,7 +161,6 @@ class Parse
         elseif($result == "loss"){
             if($diff > 0)
             {
-                echo($diff);
                 //if you were higher ranked and lost
                 $rpc = -($diff*env('LOSE_VAR',0.25));
                 if($rpc < -50)

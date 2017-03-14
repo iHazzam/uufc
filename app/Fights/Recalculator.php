@@ -51,7 +51,6 @@ class Recalculator
         foreach ($fights as $fight)
         {
             $this->createSnapsForFight($fight);
-            echo('created');
         }
 
         DB::table('updated')->insert(
@@ -116,12 +115,8 @@ class Recalculator
             //convert result of fight into correct format, count draws/nc's
             $result_f1 = $this->parse->findOutResult($fight, 1);
             $result_f2 = $this->parse->findOutResult($fight, 2);
-            if(($result_f1 || $result_f2) == null)
+            if(($result_f1 || $result_f2) != null)
             {
-                echo('fight null, no need to continue'); //no snap created
-            }
-            else{
-                echo($result_f1 . " + " . $result_f2);
                 if ($result_f1 == "win") {
                     $fighter1->wins = $fighter1->wins + 1;
                 } elseif ($result_f1 == "loss") {

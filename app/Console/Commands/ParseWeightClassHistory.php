@@ -47,7 +47,6 @@ class ParseWeightClassHistory extends Command
         $fighters = Fighter::all();
         while($currentdate < $today)
         {
-            var_dump($currentdate);
             $threeYearsAgo = $currentdate->copy()->subYears(3);
             $twoYearsAgoYesterday = $currentdate->copy()->subYears(2)->subDay();
             $twoYearsAgo = $currentdate->copy()->subYears(2);
