@@ -39,6 +39,7 @@ class ParseWeightClassHistory extends Command
      */
     public function handle()
     {
+
         $event = DB::connection('duck')->table('cards')->where('Date','<=',Carbon::today())->orderBy('Date','asc')->first();
         $thebeginning = Carbon::createFromFormat('Y-m-d H:i:s',$event->Date)->addYear('6');
         $currentdate = $thebeginning;
@@ -58,12 +59,15 @@ class ParseWeightClassHistory extends Command
             {
                 //fights older than 3 years carry no weight
                 $cumrp = ['id'=>$fighter->id,'wsw' => 0,'flw' => 0,'bw' => 0,'wbw' => 0,'fw' => 0,'wfw' => 0,'lw' => 0,'ww' => 0,'mw' => 0,'lhw' => 0,'hw' => 0];
+
+                $cumcount = ['wsw' => 0,'flw' => 0,'bw' => 0,'wbw' => 0,'fw' => 0,'wfw' => 0,'lw' => 0,'ww' => 0,'mw' => 0,'lhw' => 0,'hw' => 0];
                 //2) Fights between 2 and 3 years ago are worth 1/3 points
                 $snapshots_3 = DB::table('snapshots')->whereBetween('date',[$threeYearsAgo, $twoYearsAgoYesterday])->where('fighter_id','=',$fighter->id)->get();
                 //where('date','<=',$today->subYear(3)->format('Y-m-d'))->where('date','>',$today->subYear(2)->format('Y-m-d'))->where('fighter_id','=',$fighter->id)->get()
                 foreach($snapshots_3 as $snap3)
                 {
                     $cumrp[$snap3->weightclass] += $snap3->rp_change*(1/3);
+                    $cumcount[$snap3->weightclass] ++;
                 }
                 //2) Fights last year are worth 2/3 points
                 $snapshots_2 = DB::table('snapshots')->whereBetween('date',[$twoYearsAgo,$aYearAgoYesterday])->where('fighter_id','=',$fighter->id)->get();
@@ -71,18 +75,31 @@ class ParseWeightClassHistory extends Command
                 {
 
                     $cumrp[$snap2->weightclass] += $snap2->rp_change*(2/3);
+                    $cumcount[$snap2->weightclass] ++;
                 }
                 //3) Fights this year are worth full points
                 $snapshots_1 = DB::table('snapshots')->whereBetween('date',[$aYearAgo,$yesterday])->where('fighter_id','=',$fighter->id)->get();
                 foreach($snapshots_1 as $snap1)
                 {
                     $cumrp[$snap1->weightclass] += $snap1->rp_change;
+                    $cumcount[$snap1->weightclass] ++;
                 }
-                foreach($cumrp as $id => $val)
+
+                foreach($cumrp as $classy => $classyval)
                 {
-                    $fighter->$id = $val;
+                    if($classy != "id") {
+                        if ($cumcount[$classy] < 3) {
+                            $classyval = $classyval * 1.75;
+                        } elseif ($cumcount[$classy] < 4) {
+                            $classyval = $classyval * 1.5;
+                        } elseif ($cumcount[$classy] < 5) {
+                            $classyval = $classyval * 1.25;
+                        }
+                        $fighter->$classy = $classyval;
+                    }
                 }
                 $fighter->save();
+
             }
             foreach($weightclasses as $wc)
             {

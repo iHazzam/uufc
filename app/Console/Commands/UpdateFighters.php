@@ -92,11 +92,7 @@ class UpdateFighters extends Command
             $bar->advance();
             foreach($cumrp as $classy => $classyval)
             {
-                if($cumcount[$classy] < 2)
-                {
-                    $classyval = $classyval * 2;
-                }
-                elseif($cumcount[$classy] <3)
+                if($cumcount[$classy] <3)
                 {
                     $classyval = $classyval * 1.75;
                 }
@@ -108,8 +104,6 @@ class UpdateFighters extends Command
                 {
                     $classyval = $classyval * 1.25;
                 }
-
-
                 $fighter->$classy = $classyval;
             }
             $fighter->save();
